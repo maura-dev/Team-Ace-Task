@@ -1,0 +1,57 @@
+{
+  "name": "nestcoin-dapp",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.5.0",
+    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/react": "^12.1.4",
+    "@testing-library/user-event": "^13.5.0",
+    "chai": "^4.3.6",
+    "dot-env": "^0.0.1",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.6.2",
+    "fs": "^0.0.1-security",
+    "hardhat": "^2.9.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "5.0.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start-app": "react-scripts start",
+    "build-app": "react-scripts build",
+    "test-app": "react-scripts test",
+    "eject": "react-scripts eject",
+    "account": "npx hardhat account",
+    "accounts": "npx hardhat accounts",
+    "chain": "hardhat node --network hardhat --no-deploy",
+    "clean": "npx hardhat clean",
+    "compile": "npx hardhat compile",
+    "deploy": "node scripts/deploy.js",
+    "generate": "npx hardhat generate",
+    "help": "npx hardhat help",
+    "test-contract": "npx hardhat test",
+    "verify": "npx hardhat etherscan-verify --api-key 2ZVQM5N7KMZVNSGE2BJY2KDU28N7QGCA9T"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
