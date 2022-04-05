@@ -1,19 +1,27 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("Token contract", function () {
+  let contract;
+  let NestcoinToken;
+  let owner;
+  let addr1;
+  let addrs;
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+  beforeEach(async function () {
+    [owner, addr1, ...addrs] = await ethers.getSigners(); 
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    NestcoinToken = await ethers.getContractFactory("BatchTransact")
+    contract = await NestcoinToken.deploy()
   });
+
+
+  describe("BatchTranfer", function () {
+
+    // it('Should ', async function() {
+    //   await contract.;
+    //   console.log("")
+    // })
+  });
+
 });
