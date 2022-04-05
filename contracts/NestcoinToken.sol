@@ -10,6 +10,8 @@ contract NestcoinToken is ERC20 {
 
   event Purchase (address indexed from,  uint256 value, string item);
 
+  //minting the NXT token and assigning it to an owner(i.e the deployer)
+  //the initial batch operator (i.e address that should run the batch transactions is set to the owner(i.e the deployer))
   constructor() ERC20("Nestcoin", "NXT") {
         _mint(msg.sender, 2000 * 10 ** 18);
         _owner = msg.sender;
@@ -33,12 +35,14 @@ contract NestcoinToken is ERC20 {
         _;
     }
 
+    //batch operator can be changed for whatever reason 
     function changeBatchOperator(address newOperator) public onlyBatchOperator{
         require(newOperator != address(0), "Invalid address");
 
         batchOperator = newOperator;
     }
 
+    //Function to run the batch transactions
     function batchTransfer(address[] calldata addressesTo, uint256[] calldata amounts) external 
     onlyBatchOperator returns(bool success)
     {
@@ -54,7 +58,13 @@ contract NestcoinToken is ERC20 {
         return true;
     }
 
+    //Function for only the owner to check the remainig token after distribution
     function checkTokenBalance() public view onlyOwner returns(uint256)  {
+        return balanceOf(msg.sender);
+    }
+
+    //Function to for the current user to check their balance
+    function userBalance() public view returns(uint256) {
         return balanceOf(msg.sender);
     }
 }
