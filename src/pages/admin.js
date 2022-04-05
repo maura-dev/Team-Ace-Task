@@ -8,6 +8,7 @@ export default function Admin() {
             <div className="wallet-details">
                 <p className="key">Your Address:</p> 
                 <p className="value">0xdsg264hdhewuhu74u34h3gt36</p>
+                <br />
                 <p  className="key">Token Balance: </p>
                 <p className="value">100000 NXT</p>
             </div>

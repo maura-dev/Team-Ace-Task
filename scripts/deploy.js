@@ -4,14 +4,19 @@ const fs = require('fs')
 const contractName = "NestcoinToken"
 
 async function main() {
-    const contractFactory = await ethers.getContractFactory(`${contractName}`)
+  const [deployer] = await ethers.getSigners();
+  
+  console.log("Deploying contracts with the account:", deployer.address);
+  
+  const NestcoinToken = await ethers.getContractFactory(`${contractName}`)
 
-    const contract = await contractFactory.deploy()
-    console.log("Contract deployed to address: ", contract.address)
+  const contract = await NestcoinToken.deploy()
+  console.log("Contract deployed to address: ", contract.address)
 
-    const abi = fs.readFileSync(`./artifacts/contracts/${contractName}.sol/${contractName}.json`);
+  await contract.deployed()
+  const abi = fs.readFileSync(`./artifacts/contracts/${contractName}.sol/${contractName}.json`);
 
-    fs.writeFileSync('./src/contracts/abi.json', abi);
+  fs.writeFileSync('./src/contracts/abi.json', abi);
 }
 
 const runMain = async () => {

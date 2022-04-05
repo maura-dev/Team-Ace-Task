@@ -14,6 +14,7 @@ body,
   color: #FFFFFF;
   height:100vh;
   font-family: monospace;
+  font-size: 20px;
   /* background-image: url(''); */
 }
 
@@ -63,13 +64,16 @@ nav{
 
 .left{
   width:50%;
+  text-align: center;
 }
 
 .right{
-  width:40%
+  width:40%;
+
 }
 
 .wallet-details{
+  width:70%;
   border:1px solid #FFA503;
   border-radius: 10px;
   height:auto;
@@ -80,25 +84,26 @@ nav{
 }
 
 .wallet-details .key{
-  font-size: 16px;
+  font-size: 20px;
   color:#FFFFFF;
   font-weight: 600;
 }
 
 .wallet-details .value{
-  font-size: 16px;
+  font-size: 20px;
   color:grey;
   font-weight: 600;
 }
 
 .text{
-  font-size: 18px;
+  font-size: 28px;
   color:#FFA503;
   font-weight: 700;
+  margin: 20px auto;
 }
 
 .text-sm{
-  font-size: 14px;
+  font-size: 16px;
   color:#FFFFFF;
   font-weight: 500;
 }
