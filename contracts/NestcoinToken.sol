@@ -8,19 +8,19 @@ contract NestcoinToken is ERC20 {
   address public _owner;
   address public batchOperator;
 
-  event Purchase (address indexed from,  uint256 value, string item);
+  event SwapToken (address indexed from,  uint256 value, string item);
 
   //minting the NXT token and assigning it to an owner(i.e the deployer)
   //the initial batch operator (i.e address that should run the batch transactions is set to the owner(i.e the deployer))
   constructor() ERC20("Nestcoin", "NXT") {
-        _mint(msg.sender, 2000 * 10 ** 18);
+        _mint(msg.sender, 30000000 * 10 ** 18);
         _owner = msg.sender;
         batchOperator = _owner;
     }
 
-    function purchase(uint256 amount, string memory item) public returns (bool) {
+    function swapToken(uint256 amount, string memory item) public returns (bool) {
         transfer(_owner, amount);
-        emit Purchase(msg.sender, amount, item);
+        emit SwapToken(msg.sender, amount, item);
         return true;
     }
 
@@ -51,10 +51,12 @@ contract NestcoinToken is ERC20 {
         for(uint256 i = 0; i < addressesTo.length; i++) {
             require(addressesTo[i] != address(0), "Invalid Address");
             require(amounts[i] != 0, "You cant't trasnfer 0 tokens");
+            require(addressesTo.length <= 200, "exceeds number of allowed addressess");
+            require(amounts.length <= 200, "exceeds number of allowed amounts");
             
             require(transfer(addressesTo[i], amounts[i]), "Unable to transfer token to the account");
+            
         }
-
         return true;
     }
 
