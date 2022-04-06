@@ -33,11 +33,12 @@
 
 .purchase {
     cursor: pointer;
-    position: relative;
+    position: absolute;
     width: 135px;
     height: 42px;
-    left: 300px;
-    top: 5px;
+    right: 0;
+    bottom: 0;
+    margin: 10px;
 
     border: 2.32937px solid #FFFFFF;
     border-radius: 5.82341px;
