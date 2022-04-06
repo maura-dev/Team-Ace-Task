@@ -8,7 +8,7 @@ contract NestcoinToken is ERC20 {
   address public _owner;
   address public batchOperator;
 
-  event Purchase (address indexed from,  uint256 value, string item);
+  event SwapToken (address indexed from,  uint256 value, string item);
 
   //minting the NXT token and assigning it to an owner(i.e the deployer)
   //the initial batch operator (i.e address that should run the batch transactions is set to the owner(i.e the deployer))
@@ -18,9 +18,9 @@ contract NestcoinToken is ERC20 {
         batchOperator = _owner;
     }
 
-    function purchase(uint256 amount, string memory item) public returns (bool) {
+    function swapToken(uint256 amount, string memory item) public returns (bool) {
         transfer(_owner, amount);
-        emit Purchase(msg.sender, amount, item);
+        emit SwapToken(msg.sender, amount, item);
         return true;
     }
 
