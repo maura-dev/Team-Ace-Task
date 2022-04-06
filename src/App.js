@@ -6,7 +6,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 
 function App() {
-  const [currentAccount, setCurrentAccount] = useState ('0xrddht');
+  const [currentAccount, setCurrentAccount] = useState ('');
    
     const checkIfWalletIsConnected = async () => {
       try {
