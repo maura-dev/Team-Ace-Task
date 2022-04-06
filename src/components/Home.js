@@ -13,7 +13,7 @@ const Home = ({currentAccount, connectWallet}) => {
     <div className="hero-section">
       <div className="description">
         <p className="hero-text">
-         <span className='yellow'>Welcome</span> Human. Trade your NST coins for backstage passes and other goodies.
+         <span className='yellow'>Welcome</span> Human. Trade your NXT coins for backstage passes and other goodies.
         </p>
         <p className="center">
           <button onClick={connectWallet} className="connect-wallet ">
@@ -32,15 +32,15 @@ const Home = ({currentAccount, connectWallet}) => {
 <div className="hero-section">
   <div className="description">
     <p className="hero-text">
-     <span className='yellow'>Welcome</span> Human. Trade your NST coins for backstage passes and other goodies.
+     <span className='yellow'>Welcome</span> Human. Trade your NXT coins for backstage passes and other goodies.
     </p>
   </div>
   <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
 </div>
 
 <div className='trade-coins-section'>
-  <p className='trade'>Trade your <span className='yellow'>NST</span> </p>
-  <p>You have 0 NST tokens. Choose how you would like to spend it.</p>
+  <p className='trade'>Trade your <span className='yellow'>NXT</span> </p>
+  <p>You have 0 NXT tokens. Choose how you would like to spend it.</p>
   <MovieItems />
   </div>
 </div>
