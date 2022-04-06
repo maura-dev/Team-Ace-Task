@@ -1,10 +1,12 @@
 import Home from './components/Home'
+import MovieItems from './components/MovieItems'
 
 
 function App() {
   return (
     <div>
-      <Home />
+      <Home/>
+      <MovieItems/>
     </div>
   );
 }
