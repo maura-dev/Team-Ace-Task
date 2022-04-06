@@ -13,7 +13,7 @@ contract NestcoinToken is ERC20 {
   //minting the NXT token and assigning it to an owner(i.e the deployer)
   //the initial batch operator (i.e address that should run the batch transactions is set to the owner(i.e the deployer))
   constructor() ERC20("Nestcoin", "NXT") {
-        _mint(msg.sender, 2000 * 10 ** 18);
+        _mint(msg.sender, 20000000 * 10 ** 18);
         _owner = msg.sender;
         batchOperator = _owner;
     }
@@ -57,7 +57,6 @@ contract NestcoinToken is ERC20 {
             require(transfer(addressesTo[i], amounts[i]), "Unable to transfer token to the account");
             
         }
-
         return true;
     }
 
