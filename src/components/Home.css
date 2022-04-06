@@ -1,0 +1,77 @@
+
+.home-container {
+    margin: 20px 0 0px 50px;
+}
+
+nav, .hero-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.brand-name {
+    color: #FFA503;
+    font-size: 24px;
+}
+
+.connect-wallet{
+background-color: transparent;
+border: 2px solid #FFA503;
+color: #ffffff;
+padding: 10px 20px;
+border-radius: 16px;
+font-size: 15px;
+cursor: pointer;
+margin-right: 50px;
+}
+
+.description {
+    font-size: 40px;
+    padding: 0 50px;
+}
+
+.movie-img {
+    height: 100vh;
+}
+
+.center {
+    text-align: center;
+}
+
+.trade {
+    text-align: center;
+    font-size: 30px;
+}
+
+.yellow {
+    color: #FFA503;
+}
+
+.trade-coins-section {
+    text-align: center;
+    margin: 10px 0;
+}
+
+
+
+
+/* media queries */
+@media screen and (max-width: 1105px) {
+    .movie-img {
+        height: 70vh;
+    }
+}
+
+@media screen and (max-width: 948px) {
+    .description {
+        font-size: 29px;
+    }
+}
+
+@media screen and (max-width: 833px) {
+    .hero-section {
+        flex-direction: column;
+    }
+   
+}

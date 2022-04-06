@@ -1,18 +1,31 @@
-import React from 'react'
-import NestCoinIcon from './NestCoinIcon'
+import React from 'react';
+import "./Home.css";
 
-export default function Header() {
+export default function Header( {connectWallet, currentAccount}) {
+    //truncate wallet address
+    function truncate(input) {
+        return input.substring(0, 5) + '...' + input.substring(38);
+  };
   return (
-    <nav>
-        {/* Logo */}
-        <div className='logo'>
-            <NestCoinIcon/>
-            <p>NestCoin</p>
+    currentAccount?.length === 0 ?
+    (<div>
+      <nav>
+        <p className="brand-name">Nestcoin 🎥</p>
+        <p>
+          <button onClick={connectWallet} className="connect-wallet">
+            Connect wallet 👛
+          </button>
+        </p>
+      </nav>
+    </div>) : (
+        <div>
+            <nav>
+                <p className="brand-name">Nestcoin 🎥</p>
+                <p className='connect-wallet'>
+                {truncate(currentAccount)}
+                </p>
+            </nav>
         </div>
-        {/* connect wallet button */}
-        <button className='connect-btn'>
-            Connect Wallet
-        </button>
-    </nav>
+    )
   )
 }
