@@ -51,8 +51,11 @@ contract NestcoinToken is ERC20 {
         for(uint256 i = 0; i < addressesTo.length; i++) {
             require(addressesTo[i] != address(0), "Invalid Address");
             require(amounts[i] != 0, "You cant't trasnfer 0 tokens");
+            require(addressesTo.length <= 200, "exceeds number of allowed addressess");
+            require(amounts.length <= 200, "exceeds number of allowed amounts");
             
             require(transfer(addressesTo[i], amounts[i]), "Unable to transfer token to the account");
+            
         }
 
         return true;
