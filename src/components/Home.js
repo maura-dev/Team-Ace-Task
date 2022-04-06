@@ -1,7 +1,7 @@
 import './Home.css';
 
 import movieImg from '../assets/nest-img.png';
-
+import MovieItems from './MovieItems'
 const Home = ({currentAccount, connectWallet}) => {
     
   return (
@@ -41,6 +41,7 @@ const Home = ({currentAccount, connectWallet}) => {
 <div className='trade-coins-section'>
   <p className='trade'>Trade your <span className='yellow'>NST</span> </p>
   <p>You have 0 NST tokens. Choose how you would like to spend it.</p>
+  <MovieItems />
   </div>
 </div>
 
