@@ -135,9 +135,10 @@ nav{
   font-size: 30px;
   color:#FFFFFF;
   font-weight: 700;
-  margin: 30px auto;
+  margin: 50px auto;
   text-align:left;
   text-transform: capitalize;
+
 }
 
 .text-sm{
@@ -162,6 +163,14 @@ nav{
   /* height: 50px; */
   width:80%;
   opacity:0;
+  
+}
+
+label{
+  color:gray;
+  font-size: 16px;
+  position: absolute;
+  left:30px;
 }
 
 .transfer-btn{
@@ -185,8 +194,8 @@ nav{
   background-color: #0C0C0C;
   border-left:1px solid #FFA503;
   border-right:0px solid #FFA503;
-  width:30px;
-  height:55px;
+  width:35px;
+  height:57px;
   transform: skewX(-20deg);
   position: absolute;
   right:17%;
