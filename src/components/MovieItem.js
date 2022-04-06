@@ -11,7 +11,6 @@ const MovieItem = (props) => {
 
     return (
         <div className={`item ${image_url}`}>
-            <img />
             <div className='details'>
                 <div className='title_price'>
                     <p className='title'>{title}</p>
