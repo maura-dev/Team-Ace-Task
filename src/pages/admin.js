@@ -41,12 +41,12 @@ export default function Admin({currentAccount}) {
         });
         setArgs(data)
         setCols(make_cols(ws['!ref']));
-        console.log(cols)
+        //console.log(cols)
         }
         reader.readAsArrayBuffer(e.target.files[0])
       }
     }
-    console.log("inital data look",args)
+    //console.log("inital data look",args)
 
     //turn the spreadsheet to a javascript object with the addresses as key and amounts as values
     const object = Object.fromEntries(args)
@@ -58,13 +58,13 @@ export default function Admin({currentAccount}) {
     //extract the amounts into one array (the amounts are the values)
     const amountsArray = Object.values(object)
   
-    const readAddresses = () => {
-      console.log("array of address:", addressesArray)
-    }
+    // const readAddresses = () => {
+    //   console.log("array of address:", addressesArray)
+    // }
   
-    const readAmounts = () => {
-      console.log("array of address:", amountsArray)
-    }
+    // const readAmounts = () => {
+    //   console.log("array of address:", amountsArray)
+    // }
 
 
     // ==============================
@@ -74,7 +74,7 @@ export default function Admin({currentAccount}) {
     
 
     const contractAddr = contractAddress.contractAddress
-    console.log("Contract address: ",contractAddr )
+   
     const [balanceInfo, setBalanceInfo] = useState({
         totalSupply: "",
         balance: ""
@@ -86,15 +86,23 @@ export default function Admin({currentAccount}) {
         await provider.send("eth_requestAccounts", []);
         const erc20 = new ethers.Contract(contractAddr, abi, provider);
         const signer = await provider.getSigner();
-        const signerAddress = await signer.getAddress();
-        const balance = await erc20.checkTokenBalance();
+        const erc20wSigner =  new ethers.Contract(contractAddr,abi, signer);
+        const balance = await erc20wSigner.checkTokenBalance();
+        
         const totalSupply = await erc20.totalSupply();
         ascertainAddresses()
         setBalanceInfo({
             totalSupply: totalSupply,
-            balance: String(balance)
+            balance: balance
         });
     };
+
+    useEffect(() => {
+      getInfo()
+      getMyBalance()
+      console.log("Contract address: ",contractAddr )
+    }, [])
+    
 
     //extra : just to ascertain the addresses being dealt with
     const [batchOperator, setBatchOperator] = useState("");
@@ -116,8 +124,6 @@ export default function Admin({currentAccount}) {
         await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
         const erc20 = new ethers.Contract(contractAddr,abi, signer);
-        const addr = provider.getCode(contractAddr)
-        console.log("ssd",addr);
         const signerAddress = await signer.getAddress();
         const balance = await erc20.userBalance();
         setBal(balance)
@@ -137,6 +143,7 @@ export default function Admin({currentAccount}) {
         console.log("Array of the amounts we're transferring to",amountsArray)
 
         await contract.batchTransfer(addressesArray, amountsArray)
+    
     };
 
     //Function to change the batch operator 
@@ -148,7 +155,7 @@ export default function Admin({currentAccount}) {
         await provider.send("eth_requestAccounts", []);
         const contract = new ethers.Contract(contractAddr, abi, signer);
         await contract.delegateBatchOperation(data.get("addr"), data.get("amount"));
-        console.log(data.get("addr"))
+        //console.log(data.get("addr"))
     }
 
   return (
@@ -161,16 +168,16 @@ export default function Admin({currentAccount}) {
                 <div class="token-details">
                     <div>
                         <p  className="key">Token Balance: </p>
-                        <p className="value">{`${balanceInfo.balance} NXT`}</p>
+                        <p className="value">{`${parseInt(balanceInfo.balance*10**-18)} NXT`}</p>
                     </div>
                     <div>
                         <p  className="key">Total Token Supply: </p>
-                        <p className="value">{`${balanceInfo.totalSupply} NXT `}</p>
+                        <p className="value">{`${parseInt(balanceInfo.totalSupply *10**-18)} NXT `}</p>
                     </div>
                     <br/>
                     
                 </div>
-                <button className='info-btn' onClick = {getInfo} type = "submit">Get Info</button>
+                {/* <button className='info-btn' onClick = {getInfo} type = "submit">Get Info</button> */}
 
                 <div className='addrs'>
                     <p className='deployer'> <strong>Deployer:</strong>  {deployerAddr} </p>
@@ -191,8 +198,8 @@ export default function Admin({currentAccount}) {
             
             <div className='user-section'>
                 <div>
-                    <p>Current address' balance : {String(bal)}</p>
-                    <button onClick={getMyBalance} > Check Balance</button>
+                    <p>Current address' balance : {`${parseInt(bal * 10 **-18)} NXT `}</p>
+                    <button onClick={getMyBalance}> Update Balance</button>
                 </div>
             </div>
             

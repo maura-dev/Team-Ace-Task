@@ -3,11 +3,15 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import movieImg from '../assets/nest-img.png';
 import MovieItems from './MovieItems'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import movieTicket1 from '../assets/movie-ticket-1.png'
 import movieTicket2 from '../assets/movie-ticket-2.png'
 import movieTicket3 from '../assets/movie-ticket-3.png'
+
+import { ethers } from "ethers";
+import abi from '../artifacts/contracts/NestcoinToken.sol/NestcoinToken.json'
+import contractAddress from '../contracts/contract_address.json'
 
 const Home = ({currentAccount, connectWallet}) => {
   const [open, setOpen] = useState(false);
@@ -46,6 +50,22 @@ const Home = ({currentAccount, connectWallet}) => {
     return movieTicket1
   }
 
+  const contractAddr = contractAddress.contractAddress
+  const [bal, setBal] = useState("0")
+  const getCurrentBalance = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = await provider.getSigner();
+      const erc20 = new ethers.Contract(contractAddr,abi, signer);
+      const balance = await erc20.userBalance();
+      setBal(balance)
+  };
+
+  useEffect(() => {
+    getCurrentBalance()
+  }, [])
+  
+
   return (
     <div className="home-container">
         {
@@ -78,7 +98,7 @@ const Home = ({currentAccount, connectWallet}) => {
 
               <div className='trade-coins-section'>
                 <p className='trade'>Trade your <span className='yellow'>NXT</span> </p>
-                <p>You have 0 NXT tokens. Choose how you would like to spend it.</p>
+                <p>You have <strong> {`${parseInt(bal*10**-18)}`} NXT </strong>tokens. Choose how you would like to spend it.</p>
 
                 <Modal open={open} onClose={onCloseModal} center >
                   <span className='yellow'>{`You have succefully swapped your token for ${movieTitle}`}</span>

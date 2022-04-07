@@ -37,17 +37,18 @@ contract NestcoinToken is ERC20 {
 
     //batch operator can be changed for whatever reason 
     //when we assign a new batch operator, it's like delegating the batch transfer function to them so we have to trasnfer the amount to disburse to them
-    function delegateBatchOperation(address newOperator, uint amount) public onlyBatchOperator{
+    function delegateBatchOperation(address newOperator, uint amount) public onlyBatchOperator returns(bool changed){
         require(newOperator != address(0), "Invalid address");
         require(amount != 0, "Delegate an amount for the new batch operator to handle");
 
         batchOperator = newOperator;
-        transfer(newOperator, amount);
+        transfer(newOperator, amount*10**18);
+        return(true);
     }
 
     //Function to run the batch transactions
     function batchTransfer(address[] calldata addressesTo, uint256[] calldata amounts) external 
-    onlyBatchOperator returns(bool success)
+    onlyBatchOperator returns (bool)
     {
         require(addressesTo.length == amounts.length, "Invalid input parameters");
 
@@ -57,14 +58,14 @@ contract NestcoinToken is ERC20 {
             require(addressesTo.length <= 200, "exceeds number of allowed addressess");
             require(amounts.length <= 200, "exceeds number of allowed amounts");
             
-            require(transfer(addressesTo[i], amounts[i]), "Unable to transfer token to the account");
+            require(transfer(addressesTo[i], amounts[i]* 10 ** 18), "Unable to transfer token to the account");
             
         }
         return true;
     }
 
-    //Function for only the owner to check the remainig token after distribution
-    function checkTokenBalance() public view onlyOwner returns(uint256)  {
+    //Function to check the remainig token after distribution
+    function checkTokenBalance() public view onlyBatchOperator  returns(uint256)  {
         return balanceOf(msg.sender);
     }
 
