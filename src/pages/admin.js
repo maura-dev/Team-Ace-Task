@@ -6,13 +6,11 @@ import "./admin.css";
 import { ethers } from "ethers";
 
 import abi from '../artifacts/contracts/NestcoinToken.sol/NestcoinToken.json';
-
+import contractAddress from '../contracts/contract_address.json'
 
 
 
 export default function Admin({currentAccount}) {
-
-    const { getContractAddress } = require('@ethersproject/address');
     
     // ====================================================
     // HANDLING GETTING THE NEEDED ARRY FROM A SPREADSHEET
@@ -75,8 +73,8 @@ export default function Admin({currentAccount}) {
 
     
 
-    const contractAddr = '0x172076E0166D1F9Cc711C77Adf8488051744980C'; 
-
+    const contractAddr = contractAddress.contractAddress
+    console.log("Contract address: ",contractAddr )
     const [balanceInfo, setBalanceInfo] = useState({
         totalSupply: "",
         balance: ""
