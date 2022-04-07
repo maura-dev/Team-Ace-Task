@@ -32,7 +32,7 @@
     "eject": "react-scripts eject",
     "account": "npx hardhat account",
     "accounts": "npx hardhat accounts",
-    "chain": "hardhat node --network hardhat --no-deploy",
+    "chain": "npx hardhat node --network hardhat --no-deploy",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
     "deploy": "node scripts/deploy.js",

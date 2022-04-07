@@ -3,7 +3,8 @@ import './MovieItems.css'
 import MovieItem from './MovieItem';
 
 function MovieItems(props) {
-    // console.log(props)
+    const { balance, onModalDisplay } = props
+
     const items = [
         {
             title: "Nestcoin Movie", 
@@ -26,7 +27,7 @@ function MovieItems(props) {
       <div className='container'>
           {
               items.map((item) => {
-                return <MovieItem title={item.title} price={item.price} image_url={item.image_url} onModalDisplay={props.onModalDisplay}/>
+                return <MovieItem title={item.title} price={item.price} image_url={item.image_url} balance={balance} onModalDisplay={onModalDisplay}/>
               })
           }
       </div>

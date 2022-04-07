@@ -1,31 +1,72 @@
 import './MovieItem.css'
 import React from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import { getContract } from '../api';
 
 const MovieItem = (props) => {
-    const { title, price, image_url } = props
+    const { title, price, image_url, balance } = props
 
-    function swap() {
-        props.onModalDisplay(image_url, title, price)
+    async function swap() {
+        if (parseInt(balance) >= parseInt(price)) {
+            const contract = await getContract(window.ethereum)
+
+            const swap = await contract.swapToken(parseInt(price), title)
+            swap.wait(3)
+
+            await contract.on("SwapToken", (from, value, item) => {
+                if (swap) {
+                    props.onModalDisplay(image_url, item, value)
+                }
+            })
+
+            return
+        }
+
+        const options = {
+            title: 'Swap Token',
+            message: `You do not have enough NXT, be loyal and get more tokens`,
+            buttons: [
+                {
+                    label: 'Ok',
+                    onClick: () => {  }
+                },
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            afterClose: () => {
+
+            },
+        }
+
+        return confirmAlert(options)
+
     }
 
-    function purchase() {
+    async function purchase() {
+        let callSwap = false
+
         const options = {
             title: 'Swap Token',
             message: `Do you want to swap ${price} nxt for ${title} ticket`,
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => swap()
+                    onClick: () => callSwap = true
                 },
                 {
                     label: 'No',
-                    onClick: () => { }
+                    onClick: () => callSwap = false
                 }
             ],
             closeOnEscape: true,
             closeOnClickOutside: true,
+            afterClose: () => {
+                if (callSwap) {
+                    swap()
+                }
+            },
         }
 
         confirmAlert(options)

@@ -82,10 +82,12 @@ const Home = ({currentAccount, connectWallet}) => {
 
                 <Modal open={open} onClose={onCloseModal} center >
                   <span className='yellow'>{`You have succefully swapped your token for ${movieTitle}`}</span>
+                  <br></br>
+                  <span className='yellow'>{`${moviePrice} NXT has been deducted from you`}</span>
                   <p><img className="trade-img" src={getMovieImage()} alt="" srcset="" /></p>
                 </Modal>
 
-                <MovieItems  onModalDisplay={handleDisplayModal} />
+                <MovieItems  balance='100' onModalDisplay={handleDisplayModal} />
               </div>
             </div>
         }
