@@ -1,23 +1,36 @@
 import './MovieItem.css'
 import React from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 const MovieItem = (props) => {
     const { title, price, image_url } = props
 
-    // function swap(){
-    //     // alert(`you recieved image ${image_url}  ${price} nst for ${title} ticket`)
-    // }
+    function swap() {
+        props.onModalDisplay(image_url, title, price)
+    }
 
     function purchase() {
-        // alert(`Do you want to swap ${price} nxt for ${title} ticket`)
+        const options = {
+            title: 'Swap Token',
+            message: `Do you want to swap ${price} nxt for ${title} ticket`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => swap()
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+        }
 
-        // console.log('Swapped')
-
-        alert(`Do you want to swap ${price} nxt for ${title} ticket`)
-        props.onModalDisplay(image_url,title,price)
-        // console.log('Swapped')
-        // swap()
+        confirmAlert(options)
     }
-// console.log("props",props.onModalDisplay)
+
     return (
         <div className={`item ${image_url}`}>
             <div className='details'>
