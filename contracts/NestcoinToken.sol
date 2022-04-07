@@ -73,4 +73,12 @@ contract NestcoinToken is ERC20 {
     function userBalance() public view returns(uint256) {
         return balanceOf(msg.sender);
     }
+
+
+    //Checking if current address is the batch operator
+    function isBatchOperator() public view returns(bool) {
+      if(msg.sender == batchOperator) {
+        return true;
+      } return false;
+    }
 }

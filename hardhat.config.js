@@ -38,7 +38,7 @@ module.exports = {
   etherscan: {
     apiKey: `${ETHERSCAN_API_KEY}`
   },
-  // paths: {
-  //   artifacts: './src/artifacts',
-  // }
+  paths: {
+    artifacts: './src/artifacts',
+  }
 };
