@@ -14,9 +14,9 @@ async function main() {
   console.log("Contract deployed to address: ", contract.address)
 
   await contract.deployed()
-  const abi = fs.readFileSync(`./artifacts/contracts/${contractName}.sol/${contractName}.json`);
+  const abi = fs.readFileSync(`./src/artifacts/contracts/${contractName}.sol/${contractName}.json`);
 
-  fs.writeFileSync('./src/contracts/abi.json', abi);
+  fs.writeFileSync('./src/artifacts/contracts/abi.json', abi);
 }
 
 const runMain = async () => {
