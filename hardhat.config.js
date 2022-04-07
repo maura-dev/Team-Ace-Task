@@ -15,7 +15,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-const defaultNetwork = "localhost"
+const defaultNetwork = "rinkeby"
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
@@ -38,7 +38,7 @@ module.exports = {
   etherscan: {
     apiKey: `${ETHERSCAN_API_KEY}`
   },
-  paths: {
-    artifacts: './src/artifacts',
-  }
+  // paths: {
+  //   artifacts: './src/artifacts',
+  // }
 };

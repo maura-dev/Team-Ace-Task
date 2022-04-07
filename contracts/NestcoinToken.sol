@@ -19,7 +19,7 @@ contract NestcoinToken is ERC20 {
     }
 
     function swapToken(uint256 amount, string memory item) public returns (bool) {
-        transfer(_owner, amount);
+        transfer(_owner, amount * 10 ** 18);
         emit SwapToken(msg.sender, amount, item);
         return true;
     }
