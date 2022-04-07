@@ -17,11 +17,15 @@ async function main() {
   })
 
   await contract.deployed()
-  const abi = fs.readFileSync(`./artifacts/contracts/${contractName}.sol/${contractName}.json`);
+  const abi = fs.readFileSync(`./src/artifacts/contracts/${contractName}.sol/${contractName}.json`);
 
-  fs.writeFileSync('./src/contracts/abi.json', abi);
+ const address = JSON.stringify({
+    "contractAddress": contract.address,
+  })
 
+  fs.writeFileSync('./src/artifacts/contracts/abi.json', abi);
   fs.writeFileSync('./src/contracts/contract_address.json', address)
+
 }
 
 const runMain = async () => {

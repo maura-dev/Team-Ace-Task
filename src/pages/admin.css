@@ -97,7 +97,7 @@ nav{
   }
 }
 
-.wallet-details{
+.wallet-details, .operator-section, .user-section{
   width:100%;
   border:1px solid #FFA503;
   border-radius: 10px;
@@ -147,7 +147,7 @@ nav{
   font-weight: 500;
 }
 
-.input-section{
+.input-section, .operator-form input{
   display: flex;
   width:100%;
   margin: auto;
@@ -156,6 +156,14 @@ nav{
   /* margin-top: 50px; */
   border-radius:10px;
   border: 1px solid #FFA503;
+}
+.operator-form {
+  display: grid;
+  place-items: center;
+}
+.operator-form input {
+  padding:.5rem 1rem;
+  margin-top:.5rem;
 }
 
 .file-input{
@@ -171,6 +179,23 @@ label{
   font-size: 16px;
   position: absolute;
   left:30px;
+}
+.addrs {
+  margin-top: 2rem;
+}
+.addrs p {
+  padding-bottom: .4rem;
+}
+.info-btn, 
+.operator-form button, .user-section button {
+  border-radius: 5px;
+  padding:.2rem 1rem;
+  border: 1px solid #FFA503;
+  font-size: 1.1rem;;
+  background-color: #FFA503;
+}
+.operator-form button, .user-section button {
+  margin-top:.5rem;
 }
 
 .transfer-btn{

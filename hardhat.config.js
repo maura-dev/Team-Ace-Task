@@ -30,10 +30,10 @@ module.exports = {
     hardhat: {
       chainId: 1337
     },
-    rinkeby: {
-      url: API_URL,
-      accounts: [`0x${PRIVATE_KEY}`],
-    }
+    // rinkeby: {
+    //   url: API_URL,
+    //   accounts: [`0x${PRIVATE_KEY}`],
+    // }
   },
   etherscan: {
     apiKey: `${ETHERSCAN_API_KEY}`

@@ -59,7 +59,7 @@ function App() {
           <Header connectWallet={connectWallet} currentAccount={currentAccount}/>
         <Routes>
           <Route path="/" element={<Home connectWallet={connectWallet} currentAccount={currentAccount}/>} />
-          <Route path="/admin" element={<Admin/>} />  
+          <Route path="/admin" element={<Admin currentAccount={currentAccount}/>} />  
         </Routes>
       </BrowserRouter>
     </div>

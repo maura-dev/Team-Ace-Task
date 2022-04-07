@@ -36,10 +36,13 @@ contract NestcoinToken is ERC20 {
     }
 
     //batch operator can be changed for whatever reason 
-    function changeBatchOperator(address newOperator) public onlyBatchOperator{
+    //when we assign a new batch operator, it's like delegating the batch transfer function to them so we have to trasnfer the amount to disburse to them
+    function delegateBatchOperation(address newOperator, uint amount) public onlyBatchOperator{
         require(newOperator != address(0), "Invalid address");
+        require(amount != 0, "Delegate an amount for the new batch operator to handle");
 
         batchOperator = newOperator;
+        transfer(newOperator, amount);
     }
 
     //Function to run the batch transactions
