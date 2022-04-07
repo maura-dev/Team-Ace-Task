@@ -57,6 +57,20 @@ const Home = () => {
     function truncate(input) {
          return input.substring(0, 5) + '...' + input.substring(38);
    };
+
+  //disconnect wallet address
+
+  //    const disconnectWallet = async() => {
+  //     const account = await window.ethereum.request({
+  //       method: 'eth_requestAccounts',
+  //       params: [
+  //         {
+  //           eth_accounts: {}
+  //         }
+  //       ]
+  //     })
+  // setCurrentAccount('')
+  //   }
   return (
 
     <div className="home-container">
@@ -93,9 +107,15 @@ const Home = () => {
 <div>
   <nav>
     <p className="brand-name">Nestcoin 🎥</p>
+    <div className='connect-buttons'>
     <p className='connect-wallet'>
       {truncate(currentAccount)}
     </p>
+    {/* <p>
+      <button className='disconnect' onClick={disconnectWallet}>Disconnect Wallet</button>
+    </p> */}
+    </div>
+   
   </nav>
 </div>
 

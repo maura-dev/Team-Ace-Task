@@ -53,8 +53,19 @@ margin-right: 50px;
     margin: 10px 0;
 }
 
+.connect-buttons {
+    display: flex;
+}
 
-
+.disconnect {
+    background-color: #FFA503;
+border: 2px solid #FFA503;
+color: #ffffff;
+padding: 10px 20px;
+border-radius: 16px;
+font-size: 15px;
+cursor: pointer;
+}
 
 /* media queries */
 @media screen and (max-width: 1105px) {
