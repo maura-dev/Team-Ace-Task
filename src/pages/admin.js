@@ -100,6 +100,7 @@ export default function Admin({currentAccount}) {
     useEffect(() => {
       getInfo()
       getMyBalance()
+      isBatchOperator()
       console.log("Contract address: ",contractAddr )
     }, [])
     
@@ -155,7 +156,27 @@ export default function Admin({currentAccount}) {
         await provider.send("eth_requestAccounts", []);
         const contract = new ethers.Contract(contractAddr, abi, signer);
         await contract.delegateBatchOperation(data.get("addr"), data.get("amount"));
-        //console.log(data.get("addr"))
+
+        //console.log(data.get("addr"))     
+    }
+    
+
+    //checking if the current wallet is a batch operator
+    const [batchOperatorStatus, setBatchOperatorStatus] = useState({status: ""})
+    const isBatchOperator = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const erc20 = new ethers.Contract(contractAddr, abi, signer);
+        const operator = await erc20.isBatchOperator();
+    
+        setBatchOperatorStatus( operator ? {
+            status : console.log("yes they're an operator")
+            } : {
+                status: console.log("no they're not operator")
+        })
+
+        console.log("is batchOperator? ", batchOperatorStatus.status)
     }
 
   return (
