@@ -176,7 +176,7 @@ export default function Admin({currentAccount}) {
                 status: console.log("no they're not operator")
         })
 
-        console.log("is batchOperator? ", batchOperatorStatus.status)
+        console.log("is batchOperator? ",batchOperatorStatus.status)
     }
 
   return (
