@@ -52,7 +52,7 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
   }
 
   const contractAddr = contractAddress.contractAddress
-  const [bal, setBal] = useState("0")
+  const [bal, setBal] = useState("0");
 
   useEffect(() => {
     const getCurrentBalance = async () => {
@@ -65,7 +65,6 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
     };
     getCurrentBalance();
   }, [])
-
 
   return (
     <div className="home-container">
@@ -103,7 +102,7 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
                   <p><img className="trade-img" src={getMovieImage()} alt="" srcset="" /></p>
                 </Modal>
 
-                <MovieItems  balance={`${parseInt(bal*10**-18)}`} onModalDisplay={handleDisplayModal} />
+                <MovieItems  balance={`${parseInt(bal*10**-18)}`} onModalDisplay={handleDisplayModal}/>
               </div>
             </div>)
         }

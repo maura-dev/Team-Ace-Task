@@ -1,15 +1,39 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './MovieItem.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { getContract } from '../api';
+//import { getContract } from '../api';
+import { ethers } from 'ethers';
+
+import abi from '../contracts/abi.json'
+import contractAddress from '../contracts/contract_address.json';
+
 
 const MovieItem = (props) => {
-    const { title, price, image_url, balance } = props
-    const [movie, setMovie] = useState(0)
-    // const [movie2, setMovie2] = useState(0)
-    // const [movie3, setMovie3] = useState(0)
+    const { title, price, image_url, balance, number } = props
+    const [movie, setMovie] = useState();
+    const [purchasing, setpurchasing] = useState(false);
+    const contractAddr = contractAddress.contractAddress;
+
+    useEffect(() => {
+      setMovie(number)
+    
+    
+    }, [number])
+    
+
+    // useEffect(() => {
+    //     const res = JSON.parse(localStorage.getItem("purchases"))
+    //     if(res?.length > 0 && res !== undefined && res !== null){
+    //         setMovie((res.filter(x=> x = price)).length)
+    //     } else{
+    //         setMovie(0)
+    //     }
+        
+    //     console.log(number)
+    // }, [])
 
     const error = {
         title: 'Swap Token',
@@ -29,20 +53,25 @@ const MovieItem = (props) => {
 
 
     async function swap() {
-            const contract = await getContract(window.ethereum)
-
-            const swap = await contract.swapToken(parseInt(price), title)
-            swap.wait(3)
-
-            await contract.on("SwapToken", (from, value, item) => {
-                if (swap) {
-                    props.onModalDisplay(image_url, item, value);
-                    setMovie(movie + 1);
-                }
-            })
-
-            return
-
+        setpurchasing(true)
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const erc20 = new ethers.Contract(contractAddr,abi, signer);
+        const swap = await erc20.swapToken(parseInt(price), title)
+        if(swap){
+            setpurchasing(false)
+            setMovie(movie + 1);
+            const purchases = JSON.parse(localStorage.getItem("purchases"))
+            purchases.push(price)
+            localStorage.setItem("purchases", JSON.stringify(purchases))
+            window.location.reload();
+           
+        } else{
+            setpurchasing(false)
+            alert("Opps!, transaction failed")
+        }
+                
     }
 
     async function purchase() {
@@ -107,6 +136,9 @@ const MovieItem = (props) => {
     //         return <p> You have <span className='movie-color'>{movie3}</span> ticket(s)</p>
     //     }
     // }
+
+    
+    
     return (
         <div>
             
@@ -122,7 +154,7 @@ const MovieItem = (props) => {
                     <p> You have <span className='movie-color'>{movie}</span> ticket(s)</p>
                 </p>
                 <button className='purchase' onClick={(e) => purchase()}>
-                    Purchase
+                    {purchasing ? "Purchasing ..." : "Purchase"}
                 </button>
             </div>
         </div>
