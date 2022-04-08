@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 // import HeroImg from "../components/hero.svg";
 import NestCoinIcon from '../components/NestCoinIcon';
-import { read, utils, writeFileXLSX } from "xlsx";
+// import { read, utils, writeFileXLSX } from "xlsx";
 import "./admin.css";
 import { ethers } from "ethers";
 
@@ -16,14 +16,14 @@ export default function Admin({currentAccount}) {
     // HANDLING GETTING THE NEEDED ARRY FROM A SPREADSHEET
     // ====================================================
     const [args, setArgs] = useState([]);
-    const [cols, setCols] = useState([])
+    // const [cols, setCols] = useState([])
     const XLSX = require('xlsx')
   
-    const make_cols = refstr => {
-      let o = [], C = XLSX.utils.decode_range(refstr).e.c + 1;
-      for(var i = 0; i < C; ++i) o[i] = {name: XLSX.utils.encode_col(i), key:i};
-      return o;
-    }
+    // const make_cols = refstr => {
+    //   let o = [], C = XLSX.utils.decode_range(refstr).e.c + 1;
+    //   for(var i = 0; i < C; ++i) o[i] = {name: XLSX.utils.encode_col(i), key:i};
+    //   return o;
+    // }
 
     //getting data from the uploaded spreadsheet (.xlsx) file
     const readUploadFile = (e) => {
@@ -40,7 +40,7 @@ export default function Admin({currentAccount}) {
             header: 1
         });
         setArgs(data)
-        setCols(make_cols(ws['!ref']));
+        // setCols(make_cols(ws['!ref']));
         //console.log(cols)
         }
         reader.readAsArrayBuffer(e.target.files[0])

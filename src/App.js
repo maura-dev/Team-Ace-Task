@@ -7,12 +7,14 @@ import Home from './components/Home';
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState ('');
+  const [connected, setconnected] = useState(false)
    
     const checkIfWalletIsConnected = async () => {
       try {
         const {ethereum} = window;
         if (!ethereum) {
-          console.log ('you need to install metamask');
+          alert("Please install metamask extension");
+          window.open("https://metamask.io/download/", "_blank");
         } else {
           console.log ('found one', ethereum);
         }
@@ -25,8 +27,9 @@ function App() {
           const account = accounts[0];
           console.log ('account ', account);
           setCurrentAccount (account);
+          setconnected(true);
         } else {
-          console.log ('no authorized account found');
+          alert ('No authorized account found');
         }
       } catch (error) {
         console.log (error);
@@ -35,19 +38,26 @@ function App() {
   
     //connect wallet with button click
     const connectWallet = async() => {
-     try {
-      const {ethereum} = window;
-      if (!ethereum) {
-        console.log ('you need to install metamask');
-        return;
+      if(!connected) {
+        try {
+          const {ethereum} = window;
+          if (!ethereum) {
+            alert("Please install metamask");
+            window.open("https://metamask.io/download/", "_blank");
+            return;
+          }
+          const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      
+          console.log("Connected", accounts[0]);
+          setCurrentAccount(accounts[0]);
+          setconnected(true);
+         } catch (error) {
+           console.log(error)
+         }
+      } else{
+        setCurrentAccount("");
+        setconnected(false)
       }
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-  
-      console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]);
-     } catch (error) {
-       console.log(error)
-     }
    }
     useEffect (() => {
       checkIfWalletIsConnected ();
@@ -56,10 +66,10 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-          <Header connectWallet={connectWallet} currentAccount={currentAccount}/>
+          <Header connectWallet={connectWallet} currentAccount={currentAccount} connected={connected}/>
         <Routes>
-          <Route path="/" element={<Home connectWallet={connectWallet} currentAccount={currentAccount}/>} />
-          <Route path="/admin" element={<Admin currentAccount={currentAccount}/>} />  
+          <Route path="/" element={<Home connectWallet={connectWallet} currentAccount={currentAccount} connected={connected}/>} />
+          <Route path="/admin" element={<Admin currentAccount={currentAccount} connected={connected}/>} />  
         </Routes>
       </BrowserRouter>
     </div>

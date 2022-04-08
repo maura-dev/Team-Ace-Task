@@ -1,13 +1,13 @@
 import React from 'react';
 import "./Home.css";
 
-export default function Header( {connectWallet, currentAccount}) {
+export default function Header( {connectWallet, currentAccount, connected}) {
     //truncate wallet address
     function truncate(input) {
         return input.substring(0, 5) + '...' + input.substring(38);
   };
   return (
-    currentAccount?.length === 0 ?
+    currentAccount?.length === 0 && !connected ?
     (<div>
       <nav>
         <p className="brand-name">Nestcoin 🎥</p>
@@ -21,7 +21,7 @@ export default function Header( {connectWallet, currentAccount}) {
         <div>
             <nav>
                 <p className="brand-name">Nestcoin 🎥</p>
-                <p className='connect-wallet'>
+                <p className='connect-wallet' onClick={connectWallet}>
                 {truncate(currentAccount)}
                 </p>
             </nav>
