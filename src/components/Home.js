@@ -1,143 +1,115 @@
-import {useEffect, useState} from 'react';
 import './Home.css';
-
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
 import movieImg from '../assets/nest-img.png';
+import MovieItems from './MovieItems'
+import React, { useState, useEffect } from 'react';
 
-const Home = () => {
-    const [currentAccount, setCurrentAccount] = useState ('');
-   
-    const checkIfWalletIsConnected = async () => {
-      try {
-        const {ethereum} = window;
-        if (!ethereum) {
-          console.log ('you need to install metamask');
-        } else {
-          console.log ('found one', ethereum);
-        }
-        /*
-        * Check if we're authorized to access the user's wallet
-        */
-  
-        const accounts = await ethereum.request ({method: 'eth_accounts'});
-        if (accounts.length !== 0) {
-          const account = accounts[0];
-          console.log ('account ', account);
-          setCurrentAccount (account);
-        } else {
-          console.log ('no authorized account found');
-        }
-      } catch (error) {
-        console.log (error);
-      }
-    };
-  
-    //connect wallet with button click
-    const connectWallet = async() => {
-     try {
-      const {ethereum} = window;
-      if (!ethereum) {
-        console.log ('you need to install metamask');
-        return;
-      }
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-  
-      console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]);
-     } catch (error) {
-       console.log(error)
-     }
-   }
-    useEffect (() => {
-      checkIfWalletIsConnected ();
-    }, []);
-  
-  
-  
-    //truncate wallet address
-    function truncate(input) {
-         return input.substring(0, 5) + '...' + input.substring(38);
-   };
+import movieTicket1 from '../assets/movie-ticket-1.png'
+import movieTicket2 from '../assets/movie-ticket-2.png'
+import movieTicket3 from '../assets/movie-ticket-3.png'
 
-  //disconnect wallet address
+import { ethers } from "ethers";
+import abi from '../contracts/abi.json'
+import contractAddress from '../contracts/contract_address.json'
 
-  //    const disconnectWallet = async() => {
-  //     const account = await window.ethereum.request({
-  //       method: 'eth_requestAccounts',
-  //       params: [
-  //         {
-  //           eth_accounts: {}
-  //         }
-  //       ]
-  //     })
-  // setCurrentAccount('')
-  //   }
+
+const Home = ({currentAccount, connectWallet}) => {
+  const [open, setOpen] = useState(false);
+  const [movie, setMovie] = useState(1);
+  const [movieTitle, setMovieTitle] = useState('Nestcoin Movie');
+  const [moviePrice, setMoviePrice] = useState('75');
+
+  const onOpenModal = (imageUrl, title, price) => {
+    setOpen(true);
+
+    if (imageUrl === 'movie-2') {
+      setMovie(2)
+    } else if (imageUrl === 'movie-3') {
+      setMovie(3)
+    } else {
+      setMovie(1)
+    }
+
+    setMovieTitle(title)
+    setMoviePrice(price)
+  }
+
+  const onCloseModal = () => setOpen(false);
+
+  const handleDisplayModal = (imageUrl, title, price) => {
+    onOpenModal(imageUrl, title, price)
+  }
+
+  const getMovieImage = () => {
+    if (movie === 2) {
+      return movieTicket2
+    } else if (movie === 3) {
+      return movieTicket3
+    }
+
+    return movieTicket1
+  }
+
+  const contractAddr = contractAddress.contractAddress
+  const [bal, setBal] = useState("0")
+  const getCurrentBalance = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = await provider.getSigner();
+      const erc20 = new ethers.Contract(contractAddr,abi, signer);
+      const balance = await erc20.userBalance();
+      setBal(balance)
+  };
+
+ 
+
+
+  useEffect(() => {
+    getCurrentBalance()
+  }, [])
+
+
   return (
-
     <div className="home-container">
-        {currentAccount.length === 0 ? 
-    <div>
-    <div>
-      <nav>
-        <p className="brand-name">Nestcoin 🎥</p>
-        <p>
-          <button onClick={connectWallet} className="connect-wallet">
-            Connect wallet 👛
-          </button>
-        </p>
-      </nav>
-    </div>
+        {
+          currentAccount.length === 0 ? 
+            <div>
+              <div className="hero-section">
+                <div className="description">
+                  <p className="hero-text">
+                  <span className='yellow'>Welcome</span> Human. Trade your NXT coins for backstage passes and other goodies.
+                  </p>
+                </div>
+                <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
+              </div>
+            </div>
+         :
+            <div>
+              <div className="hero-section">
+                <div className="description">
+                  <p className="hero-text">
+                  <span className='yellow'>Welcome</span> Human. Trade your NXT coins for backstage passes and other goodies.
+                  </p>
+                </div>
+                <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
+              </div>
 
-    <div className="hero-section">
-      <div className="description">
-        <p className="hero-text">
-         <span className='yellow'>Welcome</span> Human. Trade your NST coins for backstage passes and other goodies.
-        </p>
-        <p className="center">
-          <button onClick={connectWallet} className="connect-wallet ">
-            Connect wallet 👛
-          </button>
-        </p>
-      </div>
-      <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
-    </div>
-  </div>
+              <div className='trade-coins-section'>
+                <p className='trade'>Trade your <span className='yellow'>NXT</span> </p>
+                <p>You have <strong> {`${parseInt(bal*10**-18)}`} NXT </strong>tokens. Choose how you would like to spend it.</p>
 
-:
-<div>
-<div>
-  <nav>
-    <p className="brand-name">Nestcoin 🎥</p>
-    <div className='connect-buttons'>
-    <p className='connect-wallet'>
-      {truncate(currentAccount)}
-    </p>
-    {/* <p>
-      <button className='disconnect' onClick={disconnectWallet}>Disconnect Wallet</button>
-    </p> */}
-    </div>
-   
-  </nav>
-</div>
+                <Modal open={open} onClose={onCloseModal} center >
+                  <span className='yellow'>{`You have succefully swapped your token for ${movieTitle}`}</span>
+                  <br></br>
+                  <span className='yellow'>{`${moviePrice} NXT has been deducted from you`}</span>
+                  <p><img className="trade-img" src={getMovieImage()} alt="" srcset="" /></p>
+                </Modal>
 
-<div className="hero-section">
-  <div className="description">
-    <p className="hero-text">
-     <span className='yellow'>Welcome</span> Human. Trade your NST coins for backstage passes and other goodies.
-    </p>
-  </div>
-  <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
-</div>
-
-<div className='trade-coins-section'>
-  <p className='trade'>Trade your <span className='yellow'>NST</span> </p>
-  <p>You have 0 NST tokens. Choose how you would like to spend it.</p>
-  </div>
-</div>
-
+                <MovieItems  balance='100' onModalDisplay={handleDisplayModal} />
+              </div>
+            </div>
         }
-  
-
-
     </div>
   );
 };

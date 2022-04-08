@@ -44,8 +44,18 @@ margin-right: 50px;
     font-size: 30px;
 }
 
+.black {
+    color: black;
+}
+
 .yellow {
     color: #FFA503;
+}
+
+.trade-img {
+    width: 600px;
+    height: 100%;
+    margin: 10px;
 }
 
 .trade-coins-section {

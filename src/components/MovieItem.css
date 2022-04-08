@@ -1,0 +1,83 @@
+.item {
+    width: 454px;
+    height: 521px;
+    margin: 20px auto;
+
+    border-radius: 29.1171px 29.1171px 0px 0px;
+}
+
+.movie-1 {
+    background: url('../assets/movie-ticket-1.png') no-repeat;
+}
+
+.movie-2 {
+    background: url('../assets/movie-ticket-2.png') no-repeat;
+}
+
+.movie-3 {
+    background: url('../assets/movie-ticket-3.png') no-repeat;
+}
+
+.details {
+    position: relative;
+    width: 455.5px;
+    height: 152px;
+
+    top: 369px;
+    left: -1px;
+    background: linear-gradient(137.43deg, rgba(255, 255, 255, 0.5) 3.89%, rgba(255, 255, 255, 0.2) 100%);
+    border: 1px solid #FFFFFF;
+    box-sizing: border-box;
+    backdrop-filter: blur(23.2936px);
+}
+
+.purchase {
+    cursor: pointer;
+    position: absolute;
+    width: 135px;
+    height: 42px;
+    right: 0;
+    bottom: 0;
+    margin: 10px;
+
+    border: 2.32937px solid #FFFFFF;
+    border-radius: 5.82341px;
+}
+
+.title_price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.title {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 27.9524px;
+    line-height: 33px;
+
+    color: #FFFFFF;
+}
+
+.price {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 27.9524px;
+    line-height: 33px;
+
+    color: #FFFFFF;
+}
+
+.number-of-tickets {
+    font-weight: normal;
+    font-size: 18px;
+    text-align: left;
+}
+
+.movie-color {
+    color: #FFA503;
+    font-weight: bold;
+}

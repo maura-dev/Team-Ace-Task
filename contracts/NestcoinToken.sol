@@ -8,19 +8,19 @@ contract NestcoinToken is ERC20 {
   address public _owner;
   address public batchOperator;
 
-  event Purchase (address indexed from,  uint256 value, string item);
+  event SwapToken (address indexed from,  uint256 value, string item);
 
   //minting the NXT token and assigning it to an owner(i.e the deployer)
   //the initial batch operator (i.e address that should run the batch transactions is set to the owner(i.e the deployer))
   constructor() ERC20("Nestcoin", "NXT") {
-        _mint(msg.sender, 2000 * 10 ** 18);
+        _mint(msg.sender, 30000000 * 10 ** 18);
         _owner = msg.sender;
         batchOperator = _owner;
     }
 
-    function purchase(uint256 amount, string memory item) public returns (bool) {
-        transfer(_owner, amount);
-        emit Purchase(msg.sender, amount, item);
+    function swapToken(uint256 amount, string memory item) public returns (bool) {
+        transfer(_owner, amount * 10 ** 18);
+        emit SwapToken(msg.sender, amount, item);
         return true;
     }
 
@@ -36,35 +36,49 @@ contract NestcoinToken is ERC20 {
     }
 
     //batch operator can be changed for whatever reason 
-    function changeBatchOperator(address newOperator) public onlyBatchOperator{
+    //when we assign a new batch operator, it's like delegating the batch transfer function to them so we have to trasnfer the amount to disburse to them
+    function delegateBatchOperation(address newOperator, uint amount) public onlyBatchOperator returns(bool changed){
         require(newOperator != address(0), "Invalid address");
+        require(amount != 0, "Delegate an amount for the new batch operator to handle");
 
         batchOperator = newOperator;
+        transfer(newOperator, amount*10**18);
+        return(true);
     }
 
     //Function to run the batch transactions
     function batchTransfer(address[] calldata addressesTo, uint256[] calldata amounts) external 
-    onlyBatchOperator returns(bool success)
+    onlyBatchOperator returns (bool)
     {
         require(addressesTo.length == amounts.length, "Invalid input parameters");
 
         for(uint256 i = 0; i < addressesTo.length; i++) {
             require(addressesTo[i] != address(0), "Invalid Address");
             require(amounts[i] != 0, "You cant't trasnfer 0 tokens");
+            require(addressesTo.length <= 200, "exceeds number of allowed addressess");
+            require(amounts.length <= 200, "exceeds number of allowed amounts");
             
-            require(transfer(addressesTo[i], amounts[i]), "Unable to transfer token to the account");
+            require(transfer(addressesTo[i], amounts[i]* 10 ** 18), "Unable to transfer token to the account");
+            
         }
-
         return true;
     }
 
-    //Function for only the owner to check the remainig token after distribution
-    function checkTokenBalance() public view onlyOwner returns(uint256)  {
+    //Function to check the remainig token after distribution
+    function checkTokenBalance() public view onlyBatchOperator  returns(uint256)  {
         return balanceOf(msg.sender);
     }
 
     //Function to for the current user to check their balance
     function userBalance() public view returns(uint256) {
         return balanceOf(msg.sender);
+    }
+
+
+    //Checking if current address is the batch operator
+    function isBatchOperator() public view returns(bool) {
+      if(msg.sender == batchOperator) {
+        return true;
+      } return false;
     }
 }
