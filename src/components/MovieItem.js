@@ -7,13 +7,28 @@ import { getContract } from '../api';
 
 const MovieItem = (props) => {
     const { title, price, image_url, balance } = props
-    const [movie1, setMovie1] = useState(0)
-    const [movie2, setMovie2] = useState(0)
-    const [movie3, setMovie3] = useState(0)
+    const [movie, setMovie] = useState(0)
+    // const [movie2, setMovie2] = useState(0)
+    // const [movie3, setMovie3] = useState(0)
+
+    const error = {
+        title: 'Swap Token',
+        message: `You do not have enough NXT, be loyal and get more tokens`,
+        buttons: [
+            {
+                label: 'Ok',
+                onClick: () => {  }
+            },
+        ],
+        closeOnEscape: true,
+        closeOnClickOutside: true,
+        afterClose: () => {
+
+        },
+    }
 
 
     async function swap() {
-        if (parseInt(balance) >= parseInt(price)) {
             const contract = await getContract(window.ethereum)
 
             const swap = await contract.swapToken(parseInt(price), title)
@@ -21,30 +36,12 @@ const MovieItem = (props) => {
 
             await contract.on("SwapToken", (from, value, item) => {
                 if (swap) {
-                    props.onModalDisplay(image_url, item, value)
+                    props.onModalDisplay(image_url, item, value);
+                    setMovie(movie + 1);
                 }
             })
 
             return
-        }
-
-        const options = {
-            title: 'Swap Token',
-            message: `You do not have enough NXT, be loyal and get more tokens`,
-            buttons: [
-                {
-                    label: 'Ok',
-                    onClick: () => {  }
-                },
-            ],
-            closeOnEscape: true,
-            closeOnClickOutside: true,
-            afterClose: () => {
-
-            },
-        }
-
-        return confirmAlert(options)
 
     }
 
@@ -53,12 +50,12 @@ const MovieItem = (props) => {
 
         const options = {
             title: 'Swap Token',
-            message: `Do you want to swap your ${price} nxt for ${title} ticket`,
+            message: `Do you want to swap your ${price} NXT for ${title} ticket`,
 
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => callSwap = true,
+                    onClick: () => callSwap = true
                     
                 },
                 {
@@ -69,36 +66,47 @@ const MovieItem = (props) => {
 
             closeOnEscape: true,
             closeOnClickOutside: true,
-            afterClose: () => {
-                if (callSwap) {
-                    swap()
-                    if(title === "Nestcoin Movie"){
-                        setMovie1(prev => prev += 1)
+            afterClose:() => {
+                if(callSwap){
+                    if(parseInt(balance) >= parseInt(price)){
+                        swap();
+                    } else{
+                        confirmAlert(error)
                     }
-                    else if(title === "Nestcoin Movie 2"){
-                        setMovie2(prev => prev += 1)
-                        
-                    }
-                    else {
-                        setMovie3(prev => prev += 1)
-
-                    }
+                } else{
+                    return;
                 }
-            },
+            }
+            // afterClose: () => {
+            //     if (callSwap) {
+            //         swap()
+            //         if(title === "Nestcoin Movie"){
+            //             setMovie1(prev => prev += 1)
+            //         }
+            //         else if(title === "Nestcoin Movie 2"){
+            //             setMovie2(prev => prev += 1)
+                        
+            //         }
+            //         else {
+            //             setMovie3(prev => prev += 1)
+
+            //         }
+            //     }
+           // },
         }
 
         confirmAlert(options)
     }
 
-    const movies = () => {
-        if(title === 'Nestcoin Movie'){
-            return <p> You have <span className='movie-color'>{movie1}</span> ticket(s)</p>
-        }else if (title === 'Nestcoin Movive 2') {
-            return <p> You have <span className='movie-color'>{movie2}</span> ticket(s)</p>
-        }else {
-            return <p> You have <span className='movie-color'>{movie3}</span> ticket(s)</p>
-        }
-    }
+    // const movies = () => {
+    //     if(title === 'Nestcoin Movie'){
+    //         return <p> You have <span className='movie-color'>{movie}</span> ticket(s)</p>
+    //     }else if (title === 'Nestcoin Movie 2') {
+    //         return <p> You have <span className='movie-color'>{movie2}</span> ticket(s)</p>
+    //     }else {
+    //         return <p> You have <span className='movie-color'>{movie3}</span> ticket(s)</p>
+    //     }
+    // }
     return (
         <div>
             
@@ -106,15 +114,13 @@ const MovieItem = (props) => {
             <div className='details'>
                 <div className='title_price'>
                     <div className='title'>
-                        <p>{title}</p>
-                
-                        
+                        <p>{title}</p>    
                     </div>
-                    <p className='price'>{`${price} nxt`}</p>
+                    <p className='price'>{`${price} NXT`}</p>
                 </div>
                 <p className='number-of-tickets'>
-                        {movies()}
-                        </p>
+                    <p> You have <span className='movie-color'>{movie}</span> ticket(s)</p>
+                </p>
                 <button className='purchase' onClick={(e) => purchase()}>
                     Purchase
                 </button>

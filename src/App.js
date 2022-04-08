@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect, useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "./components/Header";
@@ -65,23 +66,22 @@ function App() {
       }
    }
 
-   const userCheck = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    const signer = await provider.getSigner();
-    const erc20wSigner =  new ethers.Contract(contractAddr,abi, signer);
-    const res = await erc20wSigner.isBatchOperator();
-    if(res === true){
-      setIsAdmin(true);
-    }  else{
-      setIsAdmin(false);
-    }
-    
-}
-
-
     useEffect (() => {
+      setconnected(false)
       checkIfWalletIsConnected ();
+      //check if the connected wallet address belongs to a user or an admin
+      const userCheck = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const erc20wSigner =  new ethers.Contract(contractAddr,abi, signer);
+        const res = await erc20wSigner.isBatchOperator();
+        if(res === true){
+          setIsAdmin(true);
+        }  else{
+          setIsAdmin(false);
+        }    
+      };
       userCheck();
     }, []);
   
@@ -91,7 +91,7 @@ function App() {
           <Header connectWallet={connectWallet} currentAccount={currentAccount} connected={connected}/>
         <Routes>
           <Route path="/" element={<Home connectWallet={connectWallet} currentAccount={currentAccount} connected={connected} isAdmin={isAdmin}/>} />
-          <Route path="/admin" element={isAdmin ? <Admin currentAccount={currentAccount} connected={connected}/> : <Home connectWallet={connectWallet} currentAccount={currentAccount} connected={connected} isAdmin={isAdmin}/>} />  
+          <Route path="/admin" element={isAdmin ? <Admin currentAccount={currentAccount} connected={connected}/> :<p>Not Authorized</p>} /> 
         </Routes>
       </BrowserRouter>
     </div>

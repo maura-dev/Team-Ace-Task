@@ -27,7 +27,12 @@ function MovieItems(props) {
       <div className='container'>
           {
               items.map((item) => {
-                return <MovieItem title={item.title} price={item.price} image_url={item.image_url} balance={balance} onModalDisplay={onModalDisplay}/>
+                return <MovieItem 
+                            title={item.title} 
+                            price={item.price} 
+                            image_url={item.image_url} 
+                            balance={balance} 
+                            onModalDisplay={onModalDisplay}/>
               })
           }
 

@@ -1,20 +1,27 @@
 .item {
-    /* width: 30%; */
+    width: 100%;
     height: 521px;
     margin: 20px auto;
     border-radius: 29.1171px 29.1171px 0px 0px;
+    font-family: 'Nunito', sans-serif;
 }
 
 .movie-1 {
     background: url('../assets/movie-ticket-1.png') no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .movie-2 {
     background: url('../assets/movie-ticket-2.png') no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .movie-3 {
     background: url('../assets/movie-ticket-3.png') no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .details {
@@ -42,14 +49,14 @@
 }
 
 .title_price {
-    display: flex;
+    /* display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; */
     padding: 0 20px;
 }
 
 .title {
-    font-family: 'Rubik';
+    font-family: 'Nunito', sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 27.9524px;
@@ -59,12 +66,12 @@
 }
 
 .price {
-    font-family: 'Rubik';
+    font-family: 'Nunito', sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 27.9524px;
     line-height: 33px;
-
+    display: block;
     color: #FFFFFF;
 }
 
@@ -77,23 +84,6 @@
     color: #FFA503;
     font-weight: bold;
 }
-/* @media(max-width:1024px){
-    .item{
-        width:40%;
-    }
-}
-
-@media(max-width:767px){
-    .item{
-        width:60%;
-    }
-}
-
-@media(max-width:500px){
-    .item{
-        width:80%;
-    }
-} */
 
 
 
