@@ -1,5 +1,6 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, artifacts } = require("hardhat");
+const NestcoinToken = artifacts.require("Nestcoin Token")
 
 describe("Token contract", function () {
   let contract;
@@ -16,12 +17,24 @@ describe("Token contract", function () {
   });
 
 
-  describe("BatchTranfer", function () {
 
-    // it('Should ', async function() {
-    //   await contract.;
-    //   console.log("")
-    // })
+  describe("Transaction", function () {
+
+    it('Should make batch transfer ', async function() {
+      const BatchTranfer = await NestcoinToken.transfer(addr1, ...addrs);
+      expect(BatchTranfer).to.increase(200);
+
+      //owner to check the remaining token after distribution
+      const CheckTokenBalance = await NestcoinToken.balanceOf(owner.address);
+      expect(CheckTokenBalance).sub(totalSupply);
+
+      //current user to check their balance
+      const UserBalance = await NestcoinToken.balanceOf(addr1, ...addrs);
+      expect(UserBalance).to.increase(200);
+
+      
+    })
+
   });
 
 });
