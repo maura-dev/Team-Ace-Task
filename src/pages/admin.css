@@ -24,6 +24,18 @@ input{
   cursor:pointer;
 }
 
+
+table, td {
+  border: 1px solid #FFA503;
+  border-radius: 5px;
+}
+
+.sheet-details {
+  margin-top:2rem;
+}
+td {
+  padding:.5rem;
+}
 nav{
   background-color: transparent;
   padding: 10px 20px;
@@ -300,4 +312,20 @@ label{
   .text{
     font-size: 16px;
   }
+}
+
+.danger {
+  margin-top:3rem;
+}
+.danger button {
+  color:white;
+  border:0px solid;
+  padding:.5rem 1rem;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  background-color: red;
+}
+.danger p {
+  margin-top:.5rem;
 }
