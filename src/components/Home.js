@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 import abi from '../artifacts/contracts/NestcoinToken.sol/NestcoinToken.json'
 import contractAddress from '../contracts/contract_address.json'
 
-const Home = ({currentAccount, connectWallet, connected}) => {
+const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
   const [open, setOpen] = useState(false);
   const [movie, setMovie] = useState(1);
   const [movieTitle, setMovieTitle] = useState('Nestcoin Movie');
@@ -86,7 +86,7 @@ const Home = ({currentAccount, connectWallet, connected}) => {
               </div>
             </div>
          :
-            <div>
+            isAdmin ? null : (<div>
               <div className="hero-section">
                 <div className="description">
                   <p className="hero-text">
@@ -109,7 +109,7 @@ const Home = ({currentAccount, connectWallet, connected}) => {
 
                 <MovieItems  balance='100' onModalDisplay={handleDisplayModal} />
               </div>
-            </div>
+            </div>)
         }
     </div>
   );

@@ -7,6 +7,8 @@ import { ethers } from "ethers";
 
 import abi from '../artifacts/contracts/NestcoinToken.sol/NestcoinToken.json';
 import contractAddress from '../contracts/contract_address.json'
+// import { confirmAlert } from 'react-confirm-alert';
+import Modal from 'react-responsive-modal';
 
 
 
@@ -15,7 +17,13 @@ export default function Admin({currentAccount}) {
     /* HANDLING GETTING THE NEEDED ARRY FROM A SPREADSHEET */
 
     const [args, setArgs] = useState([]);
-     const [cols, setCols] = useState([])
+     const [cols, setCols] = useState([]);
+     const [uploading, setuploading] = useState(false);
+     const [startTransfer, setstartTransfer] = useState(false);
+     const [open, setOpen] = useState(false);
+     const onOpenModal = ()=> setOpen(true);
+     const onCloseModal = () => setOpen(false);
+
     const XLSX = require('xlsx')
   
     const make_cols = refstr => {
@@ -27,6 +35,7 @@ export default function Admin({currentAccount}) {
     //getting data from the uploaded spreadsheet (.xlsx) file
     const readUploadFile = (e) => {
       e.preventDefault();
+      setuploading(true);
       if(e.target.files) {
         const reader = new FileReader();
         const rABS = !!reader.readAsBinaryString;
@@ -45,6 +54,7 @@ export default function Admin({currentAccount}) {
         //console.log(cols)
         }
         reader.readAsArrayBuffer(e.target.files[0])
+        setuploading(false);
       }
     }
     console.log("cols",cols)
@@ -130,11 +140,12 @@ export default function Admin({currentAccount}) {
         setBal(balance)
       };
 
-    
 
 
     //Function to run the batch transfer
     const handleBatchTransfer = async () => {
+        setstartTransfer(true);
+        onOpenModal();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
@@ -145,7 +156,12 @@ export default function Admin({currentAccount}) {
         console.log( "Array of accounts we're sending to" ,addressesArray)
         console.log("Array of the amounts we're transferring to",amountsArray)
 
-        await contract.batchTransfer(addressesArray, amountsArray)
+        await contract.batchTransfer(addressesArray, amountsArray).then(()=>{
+        onCloseModal();
+         setstartTransfer(false);
+         onOpenModal();
+         getTokenBalance();
+        })
     
     };
 
@@ -190,6 +206,7 @@ export default function Admin({currentAccount}) {
     };
 
   return (
+      <>
     <div className="admin">
         <div className="left">
             <div className="wallet-details">
@@ -240,7 +257,7 @@ export default function Admin({currentAccount}) {
             <div className="input-section">
                 <input type="file" name="upload" className="file-input" id="file"
                 onChange={readUploadFile}/>
-                <label for="file">Upload your spreasheet by clicking here</label>
+                <label for="file">{uploading ?"Uploading.....  Please wait....": "Upload your spreasheet by clicking here"}</label>
                 <button onClick={handleBatchTransfer} className="transfer-btn">Send</button>
                 <div className="blob"></div>
             </div>         
@@ -270,6 +287,11 @@ export default function Admin({currentAccount}) {
         <div className="right">
             <NestCoinIcon/>
         </div>
+
     </div>
+    <Modal open={open} onClose={onCloseModal} center>
+        <p className='modal-text'>{startTransfer ? "Sending out NXT tokens ...\n Do not close this modal" : "Sent successfully"}</p>
+    </Modal>
+    </>
   )
 }

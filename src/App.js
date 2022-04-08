@@ -4,10 +4,15 @@ import "./components/Header";
 import Admin from "./pages/admin";
 import Header from './components/Header';
 import Home from './components/Home';
+import { ethers } from 'ethers';
+import abi from './artifacts/contracts/NestcoinToken.sol/NestcoinToken.json';
+import contractAddress from './contracts/contract_address.json'
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState ('');
-  const [connected, setconnected] = useState(false)
+  const [connected, setconnected] = useState(false);
+  const [ isAdmin, setIsAdmin] = useState(false);
+  const contractAddr = contractAddress.contractAddress
    
     const checkIfWalletIsConnected = async () => {
       try {
@@ -59,8 +64,25 @@ function App() {
         setconnected(false)
       }
    }
+
+   const userCheck = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = await provider.getSigner();
+    const erc20wSigner =  new ethers.Contract(contractAddr,abi, signer);
+    const res = await erc20wSigner.isBatchOperator();
+    if(res === true){
+      setIsAdmin(true);
+    }  else{
+      setIsAdmin(false);
+    }
+    
+}
+
+
     useEffect (() => {
       checkIfWalletIsConnected ();
+      userCheck();
     }, []);
   
   return (
@@ -68,8 +90,8 @@ function App() {
       <BrowserRouter>
           <Header connectWallet={connectWallet} currentAccount={currentAccount} connected={connected}/>
         <Routes>
-          <Route path="/" element={<Home connectWallet={connectWallet} currentAccount={currentAccount} connected={connected}/>} />
-          <Route path="/admin" element={<Admin currentAccount={currentAccount} connected={connected}/>} />  
+          <Route path="/" element={<Home connectWallet={connectWallet} currentAccount={currentAccount} connected={connected} isAdmin={isAdmin}/>} />
+          <Route path="/admin" element={isAdmin ? <Admin currentAccount={currentAccount} connected={connected}/> : <Home connectWallet={connectWallet} currentAccount={currentAccount} connected={connected} isAdmin={isAdmin}/>} />  
         </Routes>
       </BrowserRouter>
     </div>
