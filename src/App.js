@@ -5,7 +5,7 @@ import Admin from "./pages/admin";
 import Header from './components/Header';
 import Home from './components/Home';
 import { ethers } from 'ethers';
-import abi from './contracts/abi.json';
+import abi from './artifacts/contracts/NestcoinToken.sol/NestcoinToken.json'
 import contractAddress from './contracts/contract_address.json'
 
 function App() {
@@ -70,12 +70,16 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = await provider.getSigner();
     const erc20wSigner =  new ethers.Contract(contractAddr,abi, signer);
-    const res = await erc20wSigner.isBatchOperator();
-    if(res === true){
-      setIsAdmin(true);
-    }  else{
-      setIsAdmin(false);
-    }
+    const res= await erc20wSigner.isBatchOperator();
+    // if(res === true){
+    //   setIsAdmin(true);
+    // }  else{
+    //   setIsAdmin(false);
+    // }
+
+    res ? setIsAdmin(true) : setIsAdmin(false)
+
+    
     
 }
 

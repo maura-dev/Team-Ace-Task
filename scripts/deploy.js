@@ -8,7 +8,7 @@ async function main() {
   
   console.log("Deploying contracts with the account:", deployer.address);
   
-  const NestcoinToken = await ethers.getContractFactory(`${contractName}`)
+  const NestcoinToken = await ethers.getContractFactory("NestcoinToken")
 
   const contract = await NestcoinToken.deploy()
 
@@ -18,9 +18,9 @@ async function main() {
 
   console.log("Contract address is : ", contract.address)
   await contract.deployed()
-  const abi = fs.readFileSync(`./src/artifacts/contracts/${contractName}.sol/${contractName}.json`);
+  const abi = fs.readFileSync('src/artifacts/contracts/NestcoinToken.sol/NestcoinToken.json');
 
-
+  
 
   fs.writeFileSync('./src/artifacts/contracts/abi.json', abi);
   fs.writeFileSync('./src/contracts/contract_address.json', address)

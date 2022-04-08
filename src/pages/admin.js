@@ -5,8 +5,9 @@ import NestCoinIcon from '../components/NestCoinIcon';
 import "./admin.css";
 import { ethers } from "ethers";
 
-import abi from '../contracts/abi.json';
+import abi from '../artifacts/contracts/NestcoinToken.sol/NestcoinToken.json'
 import contractAddress from '../contracts/contract_address.json'
+
 // import { confirmAlert } from 'react-confirm-alert';
 import Modal from 'react-responsive-modal';
 
