@@ -22,7 +22,7 @@ export default function Header( {connectWallet, currentAccount}) {
         <div>
             <nav>
                 <p className="brand-name">Nestcoin 🎥</p>
-                <p className='connect-wallet'>
+                <p className='connect-wallet' onClick={connectWallet}>
                 {truncate(currentAccount)}
                 </p>
             </nav>

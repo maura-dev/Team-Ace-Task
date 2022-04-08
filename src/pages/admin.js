@@ -1,22 +1,29 @@
 import React, {useState, useEffect} from 'react';
 // import HeroImg from "../components/hero.svg";
 import NestCoinIcon from '../components/NestCoinIcon';
-import { read, utils, writeFileXLSX } from "xlsx";
+// import { read, utils, writeFileXLSX } from "xlsx";
 import "./admin.css";
 import { ethers } from "ethers";
 
 import abi from '../contracts/abi.json';
 import contractAddress from '../contracts/contract_address.json'
+// import { confirmAlert } from 'react-confirm-alert';
+import Modal from 'react-responsive-modal';
 
 
 
 export default function Admin({currentAccount}) {
     
-    // ====================================================
-    // HANDLING GETTING THE NEEDED ARRY FROM A SPREADSHEET
-    // ====================================================
+    /* HANDLING GETTING THE NEEDED ARRY FROM A SPREADSHEET */
+
     const [args, setArgs] = useState([]);
-    const [cols, setCols] = useState([])
+     const [cols, setCols] = useState([]);
+     const [uploading, setuploading] = useState(false);
+     const [startTransfer, setstartTransfer] = useState(false);
+     const [open, setOpen] = useState(false);
+     const onOpenModal = ()=> setOpen(true);
+     const onCloseModal = () => setOpen(false);
+
     const XLSX = require('xlsx')
   
     const make_cols = refstr => {
@@ -28,12 +35,15 @@ export default function Admin({currentAccount}) {
     //getting data from the uploaded spreadsheet (.xlsx) file
     const readUploadFile = (e) => {
       e.preventDefault();
+      setuploading(true);
       if(e.target.files) {
         const reader = new FileReader();
         const rABS = !!reader.readAsBinaryString;
         reader.onload = (e) => {
+            /* parse the data */
           const bstr = e.target.result;
           const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
+            /* get worksheet */
           const wsname = wb.SheetNames[0];
           const ws = wb.Sheets[wsname];
           const data = XLSX.utils.sheet_to_json(ws, {
@@ -44,8 +54,11 @@ export default function Admin({currentAccount}) {
         //console.log(cols)
         }
         reader.readAsArrayBuffer(e.target.files[0])
+        setuploading(false);
       }
     }
+    console.log("cols",cols)
+    console.log("args", args)
     //console.log("inital data look",args)
 
     //turn the spreadsheet to a javascript object with the addresses as key and amounts as values
@@ -58,13 +71,9 @@ export default function Admin({currentAccount}) {
     //extract the amounts into one array (the amounts are the values)
     const amountsArray = Object.values(object)
   
-    // const readAddresses = () => {
-    //   console.log("array of address:", addressesArray)
-    // }
-  
-    // const readAmounts = () => {
-    //   console.log("array of address:", amountsArray)
-    // }
+    console.log("array of address:", addressesArray)
+    console.log("array of address:", amountsArray)
+ 
 
 
     // ==============================
@@ -75,30 +84,32 @@ export default function Admin({currentAccount}) {
 
     const contractAddr = contractAddress.contractAddress
    
-    const [balanceInfo, setBalanceInfo] = useState({
-        totalSupply: "",
-        balance: ""
-    })
+    const [totalSupply, setTotalSupply] = useState("")
 
     //getting our initial info => token balance and the total fixed supply minted
-    const getInfo = async () => {
+    const getTotalSupply = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
         const erc20 = new ethers.Contract(contractAddr, abi, provider);
+        const _totalSupply = await erc20.totalSupply();
+        setTotalSupply(_totalSupply)
+    };
+
+    //calling the tokenBalance 
+    const [tokenBal, setTokenBal] = useState("Owner view only")
+    const getTokenBalance = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
         const erc20wSigner =  new ethers.Contract(contractAddr,abi, signer);
         const balance = await erc20wSigner.checkTokenBalance();
-        
-        const totalSupply = await erc20.totalSupply();
-        ascertainAddresses()
-        setBalanceInfo({
-            totalSupply: totalSupply,
-            balance: balance
-        });
-    };
+        setTokenBal(balance)
+    }
 
     useEffect(() => {
-      getInfo()
+      getTokenBalance()
+      getTotalSupply()
+      ascertainAddresses()
       getMyBalance()
       isBatchOperator()
       console.log("Contract address: ",contractAddr )
@@ -125,14 +136,16 @@ export default function Admin({currentAccount}) {
         await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
         const erc20 = new ethers.Contract(contractAddr,abi, signer);
-        const signerAddress = await signer.getAddress();
         const balance = await erc20.userBalance();
         setBal(balance)
       };
 
 
+
     //Function to run the batch transfer
     const handleBatchTransfer = async () => {
+        setstartTransfer(true);
+        onOpenModal();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
         const signer = await provider.getSigner();
@@ -143,7 +156,12 @@ export default function Admin({currentAccount}) {
         console.log( "Array of accounts we're sending to" ,addressesArray)
         console.log("Array of the amounts we're transferring to",amountsArray)
 
-        await contract.batchTransfer(addressesArray, amountsArray)
+        await contract.batchTransfer(addressesArray, amountsArray).then(()=>{
+        onCloseModal();
+         setstartTransfer(false);
+         onOpenModal();
+         getTokenBalance();
+        })
     
     };
 
@@ -179,7 +197,16 @@ export default function Admin({currentAccount}) {
         console.log("is batchOperator? ",batchOperatorStatus.status)
     }
 
+    const destroyContract = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(contractAddr,abi, signer);
+        await contract.destroySmartContract();
+    };
+
   return (
+      <>
     <div className="admin">
         <div className="left">
             <div className="wallet-details">
@@ -189,11 +216,11 @@ export default function Admin({currentAccount}) {
                 <div class="token-details">
                     <div>
                         <p  className="key">Token Balance: </p>
-                        <p className="value">{`${parseInt(balanceInfo.balance*10**-18)} NXT`}</p>
+                        <p className="value">{`${parseInt(tokenBal*10**-18)} NXT`}</p>
                     </div>
                     <div>
                         <p  className="key">Total Token Supply: </p>
-                        <p className="value">{`${parseInt(balanceInfo.totalSupply *10**-18)} NXT `}</p>
+                        <p className="value">{`${parseInt(totalSupply *10**-18)} NXT `}</p>
                     </div>
                     <br/>
                     
@@ -230,17 +257,41 @@ export default function Admin({currentAccount}) {
             <div className="input-section">
                 <input type="file" name="upload" className="file-input" id="file"
                 onChange={readUploadFile}/>
-                <label for="file">Upload your spreasheet by clicking here</label>
+                <label for="file">{uploading ?"Uploading.....  Please wait....": "Upload your spreasheet by clicking here"}</label>
                 <button onClick={handleBatchTransfer} className="transfer-btn">Send</button>
                 <div className="blob"></div>
             </div>         
             {/* <p className="text"><span style={{color:"#ffa503"}}>Mint NXT coins</span> to increase the total supply of the nestcoin tokens</p>  
             <button className="mint-btn">Mint Tokens</button>  */}
-            <p>{JSON.stringify(args, null, 1)}</p>
+            {/* <p>{JSON.stringify(args, null, 1)}</p> */}
+
+            <div className='sheet-details'>
+                <table>
+                    <tbody>
+                        {args.map((r,i) => (
+                            <tr key={i}>
+                                {cols.map(c => (
+                                    <td key = {c.key}>{r[c.key]} </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className='danger'>
+                <button onClick={destroyContract}> DESTROY CONTRACT </button>
+                <p>Warning: all tokens will be destroyed and tokens will not be distributable anymore</p>
+            </div>
         </div>
         <div className="right">
             <NestCoinIcon/>
         </div>
+
     </div>
+    <Modal open={open} onClose={onCloseModal} center>
+        <p className='modal-text'>{startTransfer ? "Sending out NXT tokens ...\n Do not close this modal" : "Sent successfully"}</p>
+    </Modal>
+    </>
   )
 }

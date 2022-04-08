@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
 

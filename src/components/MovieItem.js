@@ -108,12 +108,13 @@ const MovieItem = (props) => {
                     <div className='title'>
                         <p>{title}</p>
                 
-                        <p className='number-of-tickets'>
-                        {movies()}
-                        </p>
+                        
                     </div>
                     <p className='price'>{`${price} nxt`}</p>
                 </div>
+                <p className='number-of-tickets'>
+                        {movies()}
+                        </p>
                 <button className='purchase' onClick={(e) => purchase()}>
                     Purchase
                 </button>

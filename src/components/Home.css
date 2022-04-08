@@ -1,6 +1,6 @@
 
 .home-container {
-    margin: 20px 0 0px 50px;
+    margin: 20px auto;
 }
 
 nav, .hero-section {
@@ -60,7 +60,11 @@ margin-right: 50px;
 
 .trade-coins-section {
     text-align: center;
-    margin: 10px 0;
+    margin: 10px auto;
+}
+
+.balance-txt{
+    padding: 20px;
 }
 
 .connect-buttons {

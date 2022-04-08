@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract NestcoinToken is ERC20 {
   address public _owner;
   address public batchOperator;
-
+  event Delegate (address indexed to, uint256 amount);
   event SwapToken (address indexed from,  uint256 value, string item);
 
   //minting the NXT token and assigning it to an owner(i.e the deployer)
@@ -43,15 +43,22 @@ contract NestcoinToken is ERC20 {
 
         batchOperator = newOperator;
         transfer(newOperator, amount*10**18);
-        return(true);
+
+        emit Delegate(newOperator, amount);
+
+        return(true); 
     }
 
-    //Function to run the batch transactions
+    
+
+
+    //Function to run the batch transactions, return the success and sum of amounts [sent]
     function batchTransfer(address[] calldata addressesTo, uint256[] calldata amounts) external 
-    onlyBatchOperator returns (bool)
+    onlyBatchOperator returns (uint, bool)
     {
         require(addressesTo.length == amounts.length, "Invalid input parameters");
 
+        uint256 sum = 0;
         for(uint256 i = 0; i < addressesTo.length; i++) {
             require(addressesTo[i] != address(0), "Invalid Address");
             require(amounts[i] != 0, "You cant't trasnfer 0 tokens");
@@ -59,13 +66,13 @@ contract NestcoinToken is ERC20 {
             require(amounts.length <= 200, "exceeds number of allowed amounts");
             
             require(transfer(addressesTo[i], amounts[i]* 10 ** 18), "Unable to transfer token to the account");
-            
+            sum += amounts[i];
         }
-        return true;
+        return(sum, true);
     }
 
     //Function to check the remainig token after distribution
-    function checkTokenBalance() public view onlyBatchOperator  returns(uint256)  {
+    function checkTokenBalance() public view onlyOwner  returns(uint256)  {
         return balanceOf(msg.sender);
     }
 
@@ -80,5 +87,15 @@ contract NestcoinToken is ERC20 {
       if(msg.sender == batchOperator) {
         return true;
       } return false;
+    }
+
+    //Function to destroy the smart contract 
+    function destroySmartContract(address payable _to) public onlyOwner{
+      require(msg.sender == _owner, "Only the owner ia authorised to do this");
+      approve(msg.sender, checkTokenBalance());
+
+      //token becomes zero after selfdestruct runs, everything fries
+      transferFrom(msg.sender, _to, checkTokenBalance());
+      selfdestruct(_to);
     }
 }

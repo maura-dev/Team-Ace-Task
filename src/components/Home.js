@@ -13,8 +13,7 @@ import { ethers } from "ethers";
 import abi from '../contracts/abi.json'
 import contractAddress from '../contracts/contract_address.json'
 
-
-const Home = ({currentAccount, connectWallet}) => {
+const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
   const [open, setOpen] = useState(false);
   const [movie, setMovie] = useState(1);
   const [movieTitle, setMovieTitle] = useState('Nestcoin Movie');
@@ -85,7 +84,7 @@ const Home = ({currentAccount, connectWallet}) => {
               </div>
             </div>
          :
-            <div>
+            isAdmin ? null : (<div>
               <div className="hero-section">
                 <div className="description">
                   <p className="hero-text">
@@ -97,7 +96,7 @@ const Home = ({currentAccount, connectWallet}) => {
 
               <div className='trade-coins-section'>
                 <p className='trade'>Trade your <span className='yellow'>NXT</span> </p>
-                <p>You have <strong> {`${parseInt(bal*10**-18)}`} NXT </strong>tokens. Choose how you would like to spend it.</p>
+                <p className='balance-txt'>You have <strong> {`${parseInt(bal*10**-18)}`} NXT </strong>tokens. Choose how you would like to spend it.</p>
 
                 <Modal open={open} onClose={onCloseModal} center >
                   <span className='yellow'>{`You have succefully swapped your token for ${movieTitle}`}</span>
@@ -108,7 +107,7 @@ const Home = ({currentAccount, connectWallet}) => {
 
                 <MovieItems  balance='100' onModalDisplay={handleDisplayModal} />
               </div>
-            </div>
+            </div>)
         }
     </div>
   );
