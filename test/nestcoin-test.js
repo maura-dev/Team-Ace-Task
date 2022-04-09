@@ -22,12 +22,12 @@ describe("Nestcoin Token", function() {
   })
 
   describe("swap token", function() {
-    // it("User token should reduce after token swap", async function() {
-    //   const NestcoinToken = await ethers.getContractFactory("NestcoinToken")
-    //   const nestcoin_token = await NestcoinToken.deploy()
-    //   await nestcoin_token.deployed()
+    it("User token should reduce after token swap", async function() {
+      const NestcoinToken = await ethers.getContractFactory("NestcoinToken")
+      const nestcoin_token = await NestcoinToken.deploy()
+      await nestcoin_token.deployed()
 
-    // })
+    })
   })
 
   describe("Token contract", function () {
@@ -44,12 +44,22 @@ describe("Nestcoin Token", function() {
       contract = await NestcoinToken.deploy()
     });
   
-    describe("BatchTranfer", function () {
+    describe("Transaction", function () {
+
+      it('Should make batch transfer ', async function() {
+        const BatchTranfer = await NestcoinToken.transfer(addr1, ...addrs);
+        expect(BatchTranfer).to.increase(200);
   
-      // it('Should ', async function() {
-      //   await contract.;
-      //   console.log("")
-      // })
-    });
+        //owner to check the remaining token after distribution
+        const CheckTokenBalance = await NestcoinToken.balanceOf(owner.address);
+        expect(CheckTokenBalance).sub(totalSupply);
+  
+        //current user to check their balance
+        const UserBalance = await NestcoinToken.balanceOf(addr1, ...addrs);
+        expect(UserBalance).to.increase(200);
+  
+        
+      })
   });
 })
+});
