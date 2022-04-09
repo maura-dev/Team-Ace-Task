@@ -4,7 +4,7 @@ import MovieItem from './MovieItem';
 import { useEffect, useState } from 'react';
 
 function MovieItems(props) {
-    const { balance, onModalDisplay } = props
+    const { balance, onModalDisplay, handleRefresh } = props
     const [purchases, setPurchases] = useState([])
 
     useEffect(() => {
@@ -45,11 +45,13 @@ function MovieItems(props) {
           {
               items.map((item) => {
                 return <MovieItem 
+                            key={item.price}
                             title={item.title} 
                             price={item.price} 
                             image_url={item.image_url} 
                             balance={balance} 
                             number={item.number}
+                            handleRefresh={handleRefresh}
                             onModalDisplay={onModalDisplay}/>
                             
               })

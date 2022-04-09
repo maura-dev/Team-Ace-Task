@@ -54,6 +54,10 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
   const contractAddr = contractAddress.contractAddress
   const [bal, setBal] = useState("0");
 
+  const refreshBal = async(bal) => {
+    setBal(bal);
+  }
+
   useEffect(() => {
     const getCurrentBalance = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -61,10 +65,10 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
       const signer = await provider.getSigner();
       const erc20 = new ethers.Contract(contractAddr,abi, signer);
       const balance = await erc20.userBalance();
-      setBal(balance)
+      setBal(balance);
     };
     getCurrentBalance();
-  }, [])
+  }, [bal])
 
   return (
     <div className="home-container">
@@ -77,7 +81,7 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
                   <span className='yellow'>Welcome</span> Human. Trade your NXT coins for backstage passes and other goodies.
                   </p>
                 </div>
-                <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
+                <p><img className="movie-img" src={movieImg} alt="img"  /></p>
               </div>
             </div>
          :
@@ -88,7 +92,7 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
                   <span className='yellow'>Welcome</span> Human. Trade your NXT coins for backstage passes and other goodies.
                   </p>
                 </div>
-                <p><img className="movie-img" src={movieImg} alt="" srcset="" /></p>
+                <p><img className="movie-img" src={movieImg} alt="img" /></p>
               </div>
 
               <div className='trade-coins-section'>
@@ -99,10 +103,10 @@ const Home = ({currentAccount, connectWallet, connected, isAdmin}) => {
                   <span className='yellow'>{`You have succefully swapped your token for ${movieTitle}`}</span>
                   <br></br>
                   <span className='yellow'>{`${moviePrice} NXT has been deducted from you`}</span>
-                  <p><img className="trade-img" src={getMovieImage()} alt="" srcset="" /></p>
+                  <p><img className="trade-img" src={getMovieImage()} alt="img" /></p>
                 </Modal>
 
-                <MovieItems  balance={`${parseInt(bal*10**-18)}`} onModalDisplay={handleDisplayModal}/>
+                <MovieItems  balance={`${parseInt(bal*10**-18)}`} onModalDisplay={handleDisplayModal} handleRefresh={refreshBal}/>
               </div>
             </div>)
         }

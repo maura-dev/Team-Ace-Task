@@ -12,15 +12,13 @@ import contractAddress from '../contracts/contract_address.json';
 
 
 const MovieItem = (props) => {
-    const { title, price, image_url, balance, number } = props
+    const { title, price, image_url, balance, number, handleRefresh } = props
     const [movie, setMovie] = useState();
     const [purchasing, setpurchasing] = useState(false);
     const contractAddr = contractAddress.contractAddress;
 
     useEffect(() => {
       setMovie(number)
-    
-    
     }, [number])
     
 
@@ -62,10 +60,27 @@ const MovieItem = (props) => {
         if(swap){
             setpurchasing(false)
             setMovie(movie + 1);
-            const purchases = JSON.parse(localStorage.getItem("purchases"))
-            purchases.push(price)
-            localStorage.setItem("purchases", JSON.stringify(purchases))
-            window.location.reload();
+            const purchases = JSON.parse(localStorage.getItem("purchases"));
+            if(purchases?.length > 0 && purchases !== undefined && purchases !== null){
+                purchases?.push(price);
+                localStorage.setItem("purchases", JSON.stringify(purchases));
+            } else{
+                const newPur = [];
+                newPur.push(price)
+                localStorage.setItem("purchases", JSON.stringify(newPur));
+            }
+            const getCurrentBalance = async () => {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                const signer = await provider.getSigner();
+                const erc20 = new ethers.Contract(contractAddr,abi, signer);
+                const balance = await erc20.userBalance();
+                handleRefresh(balance);
+             };
+
+             getCurrentBalance();
+            // console.log(purchases)
+            // window.location.reload();
            
         } else{
             setpurchasing(false)
@@ -150,9 +165,9 @@ const MovieItem = (props) => {
                     </div>
                     <p className='price'>{`${price} NXT`}</p>
                 </div>
-                <p className='number-of-tickets'>
+                <div className='number-of-tickets'>
                     <p> You have <span className='movie-color'>{movie}</span> ticket(s)</p>
-                </p>
+                </div>
                 <button className='purchase' onClick={(e) => purchase()}>
                     {purchasing ? "Purchasing ..." : "Purchase"}
                 </button>
