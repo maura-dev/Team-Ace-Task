@@ -4,6 +4,7 @@ coverage
 coverage.json
 typechain
 yarn-error.log
+build
 
 
 #Hardhat files

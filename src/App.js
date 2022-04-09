@@ -35,7 +35,7 @@ function App() {
           setCurrentAccount (account);
           setconnected(true);
         } else {
-          alert ('No authorized account found');
+          console.log('No authorized account found');
         }
       } catch (error) {
         console.log (error);
